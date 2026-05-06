@@ -1,0 +1,49 @@
+{
+  "name": "crichub",
+  "version": "1.0.0",
+  "description": "Captain command centre for weekly cricket team admin.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mr-Harsh14/CricHub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mr-Harsh14/CricHub/issues"
+  },
+  "homepage": "https://github.com/Mr-Harsh14/CricHub#readme",
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "next": "^16.2.5",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.4",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.5",
+    "jsdom": "^27.0.1",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^4.2.4",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}

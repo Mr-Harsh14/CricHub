@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id              String                 @id @default(cuid())
+  name            String
+  phone           String?
+  role            String                 @default("All-rounder")
+  battingStyle    String?
+  bowlingStyle    String?
+  isWicketkeeper  Boolean                @default(false)
+  dateOfBirth     DateTime?
+  guardianConsent Boolean                @default(false)
+  consentNotes    String?
+  notes           String?
+  active          Boolean                @default(true)
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  availability    AvailabilityResponse[]
+  selections      Selection[]
+  payments        PaymentEntry[]
+}
+
+model Fixture {
+  id                String                 @id @default(cuid())
+  opposition        String
+  date              DateTime
+  startTime         String?
+  homeAway          String                 @default("HOME")
+  groundName        String?
+  groundAddress     String?
+  division          String?
+  tier              String?
+  matchType         String?
+  scorerNotes       String?
+  umpireNotes       String?
+  homeInfo          String?
+  status            String                 @default("UPCOMING")
+  availabilityToken String                 @unique @default(cuid())
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  availability      AvailabilityResponse[]
+  selections        Selection[]
+  adminTasks        MatchAdminTask[]
+  payments          PaymentEntry[]
+}
+
+model AvailabilityResponse {
+  id          String   @id @default(cuid())
+  fixtureId   String
+  playerId    String?
+  playerName  String
+  status      String
+  notes       String?
+  transport   String?
+  submittedAt DateTime @default(now())
+  fixture     Fixture  @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+  player      Player?  @relation(fields: [playerId], references: [id], onDelete: SetNull)
+
+  @@unique([fixtureId, playerId])
+}
+
+model Selection {
+  id             String   @id @default(cuid())
+  fixtureId      String
+  playerId       String
+  selected       Boolean  @default(true)
+  battingPosition Int?
+  isCaptain      Boolean  @default(false)
+  isWicketkeeper Boolean  @default(false)
+  isScorer       Boolean  @default(false)
+  isDriver       Boolean  @default(false)
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  fixture        Fixture  @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+  player         Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([fixtureId, playerId])
+}
+
+model MatchAdminTask {
+  id         String   @id @default(cuid())
+  fixtureId  String
+  stage      String
+  label      String
+  details    String?
+  isComplete Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  fixture    Fixture  @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+}
+
+model PaymentEntry {
+  id              String   @id @default(cuid())
+  fixtureId       String
+  playerId        String?
+  playerName      String
+  feeOwedPence    Int      @default(0)
+  amountPaidPence Int      @default(0)
+  status          String   @default("UNPAID")
+  method          String?
+  isExpense       Boolean  @default(false)
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  fixture         Fixture  @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+  player          Player?  @relation(fields: [playerId], references: [id], onDelete: SetNull)
+}
+
+model MessageTemplate {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  category  String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
